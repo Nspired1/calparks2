@@ -8,6 +8,14 @@ const path = require("path");
 const mongoose = require("mongoose");
 const Park = require("./models/park");
 
+const PORT = process.env.PORT || 3001;
+const IP = process.env.IP;
+
+// set view engine
+app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "views"));
+
+// mongoose settings and connection
 mongoose.connect("mongodb://localhost:27017/calparks2", {
   useNewUrlParser: true,
   useCreateIndex: true,
@@ -20,12 +28,7 @@ db.once("open", () => {
   console.log("Connected to local Database");
 });
 
-app.set("view engine", "ejs");
-app.set("views", path.join(__dirname, "views"));
-
-const PORT = process.env.PORT || 3001;
-const IP = process.env.IP;
-
+// routes
 app.get("/", (req, res) => {
   res.render("home");
 });
