@@ -36,11 +36,23 @@ module.exports.descriptors = [
   "Bramble",
   "Brush",
   "Point",
+  "Bullfrog",
+  "Salamander",
+  "Newt",
+  "Brown Bear",
+  "Woodpecker",
+  "Fox",
+  "Raccoon",
+  "Red tailed Hawk",
+  "Skunk",
+  "Coyote",
+  "Pelican",
 ];
 
 module.exports.places = [
   "Shore",
   "Cove",
+  "Bay",
   "Forest",
   "Glenn",
   "Dell",
@@ -77,4 +89,7 @@ module.exports.places = [
   "Fort",
   "Port",
   "Dunes",
+  "Sands",
+  "Spring",
+  "Boulders",
 ];

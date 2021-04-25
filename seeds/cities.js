@@ -38,4 +38,5 @@ module.exports = [
   { city: "Malibu", state: "California" },
   { city: "Carlsbad", state: "California" },
   { city: "San Clementine", state: "California" },
+  { city: "San Luis Obispo", state: "California" },
 ];
