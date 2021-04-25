@@ -34,4 +34,6 @@ const seedDB = async () => {
 };
 
 // invoking the function that will actually seed the database
-seedDB();
+seedDB().then(() => {
+  mongoose.connection.close();
+});
