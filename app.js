@@ -7,13 +7,16 @@ const app = express();
 const path = require("path");
 const mongoose = require("mongoose");
 const Park = require("./models/park");
-
+const methodOverride = require("method-override");
 const PORT = process.env.PORT || 3001;
 const IP = process.env.IP;
 
 // set view engine
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
+
+app.use(express.urlencoded({ extended: true }));
+app.use(methodOverride("_method"));
 
 // mongoose settings and connection
 mongoose.connect("mongodb://localhost:27017/calparks2", {
@@ -29,14 +32,57 @@ db.once("open", () => {
 });
 
 // routes
+
+// home page
 app.get("/", (req, res) => {
   res.render("home");
 });
 
-app.get("/makepark", async (req, res) => {
-  const park = new Park({ title: "My frontyard" });
+// GET all parks
+app.get("/parks", async (req, res) => {
+  const parks = await Park.find({});
+  res.render("parks/index", { parks });
+});
+
+// GET form for new park
+app.get("/parks/new", (req, res) => {
+  res.render("parks/new");
+});
+
+// POST req to make a new park
+app.post("/parks", async (req, res) => {
+  const park = new Park(req.body.park);
   await park.save();
-  res.send(park);
+  res.redirect(`/parks/${park._id}`);
+});
+
+// GET one park
+app.get("/parks/:id", async (req, res) => {
+  const park = await Park.findById(req.params.id);
+  res.render("parks/show", { park });
+});
+
+//====  EDIT PARK =====//
+// GET form for EDIT
+app.get("/parks/:id/edit", async (req, res) => {
+  const park = await Park.findById(req.params.id);
+  res.render("parks/edit", { park });
+});
+
+//
+app.put("/parks/:id", async (req, res) => {
+  const { id } = req.params;
+  const park = await Park.findByIdAndUpdate(id, { ...req.body.park });
+  res.redirect(`/parks/${park._id}`);
+});
+
+app.delete("/parks/:id", async (req, res) => {
+  console.log("This is the req.params for delete park route");
+  console.log(`This is req.params: ${req.params}`);
+  console.log(req.params);
+  const { id } = req.params;
+  await Park.findByIdAndDelete(id);
+  res.redirect("/parks");
 });
 
 // to start app at command line type 'node app.js' or 'nodemon app.js' and press <ENTER>
