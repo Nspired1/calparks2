@@ -8,6 +8,9 @@ const path = require("path");
 const mongoose = require("mongoose");
 const Park = require("./models/park");
 const methodOverride = require("method-override");
+const morgan = require("morgan");
+
+// env variables
 const PORT = process.env.PORT || 3001;
 const IP = process.env.IP;
 
@@ -17,6 +20,9 @@ app.set("views", path.join(__dirname, "views"));
 
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
+
+// console logger for dev env
+app.use(morgan("dev"));
 
 // mongoose settings and connection
 mongoose.connect("mongodb://localhost:27017/calparks2", {
@@ -44,7 +50,8 @@ app.get("/parks", async (req, res) => {
   res.render("parks/index", { parks });
 });
 
-// GET form for new park
+//=== Make a NEW park ====//
+// GET form to make a new park
 app.get("/parks/new", (req, res) => {
   res.render("parks/new");
 });
@@ -56,7 +63,7 @@ app.post("/parks", async (req, res) => {
   res.redirect(`/parks/${park._id}`);
 });
 
-// GET one park
+//=== GET one park, SHOW ===//
 app.get("/parks/:id", async (req, res) => {
   const park = await Park.findById(req.params.id);
   res.render("parks/show", { park });
@@ -76,6 +83,7 @@ app.put("/parks/:id", async (req, res) => {
   res.redirect(`/parks/${park._id}`);
 });
 
+// DELETE park
 app.delete("/parks/:id", async (req, res) => {
   console.log("This is the req.params for delete park route");
   console.log(`This is req.params: ${req.params}`);
