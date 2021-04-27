@@ -1,12 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Show Page</title>
-</head>
-<body>
+<% layout('layouts/boilerplate') %>
     <h1><%= park.title %></h1>
     <h2><%= park.location%></h2>
     <a href="/parks/<%= park._id %>/edit">Edit</a>
@@ -22,5 +14,3 @@
         <a href="/parks"><button>Back to All Parks</button></a>
        </p>
     </footer>
-</body>
-</html>
