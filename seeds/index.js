@@ -28,6 +28,7 @@ const seedDB = async () => {
     const park = new Park({
       location: `${cities[random30].city}, ${cities[random30].state}`,
       title: `${sample(descriptors)} ${sample(places)}`,
+      image: "https://source.unsplash.com/s/collections/national-park",
     });
     await park.save();
   }
