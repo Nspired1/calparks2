@@ -47,6 +47,11 @@ app.get("/", (req, res) => {
   res.render("home");
 });
 
+// about page
+app.get("/about", (req, res) => {
+  res.render("about");
+});
+
 // GET all parks
 app.get(
   "/parks",
