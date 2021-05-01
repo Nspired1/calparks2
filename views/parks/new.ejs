@@ -1,15 +1,62 @@
 <% layout('layouts/boilerplate') %>
-    <form action="/parks" method="POST">
+    <form action="/parks" method="POST" class="needs-validation" novalidate>
     <div>
         <label for="title">Title</label>
-        <input type="text" id="title" name="park[title]">
+        <input type="text" id="title" name="park[title]"  aria-describedby="title" required>
+        <div class="valid-feedback">
+            Looks good!
+        </div>
+        <div id="title" class="invalid-feedback">
+            Please provide a park title.
+          </div>
     </div>
+ 
     <div>
         <label for="location">Location</label>
-        <input type="text" id="location" name="park[location]">
+        <input type="text" id="location" name="park[location]" aria-describedby="location" required>
+        <div class="valid-feedback">
+            Looks good!
+        </div>
+        <div id="title" class="invalid-feedback">
+            Please provide a location.
+          </div>
+    </div>
+ 
+    <div>
+        <label for="price">Price</label>
+        <input type="number" id="price" name="park[price]" >
+    </div>
+    <div>
+        <label for="description">Description</label>
+        <textarea type="text" id="description" name="park[description]" aria-describedby="description" required></textarea>
+        <div class="valid-feedback">
+            Looks good!
+        </div>
+        <div id="title" class="invalid-feedback">
+            Please provide a park description.
+          </div>
     </div>
     <button>Add Park</button>
     </form>
     <footer>
         <a href="/parks">Back to All Parks</a>
     </footer>
+
+    <script>
+        (function() {
+          window.addEventListener('load', function() {
+            // Fetch all the forms we want to apply custom Bootstrap validation styles to
+            var forms = document.getElementsByClassName('needs-validation');
+            // Loop over them and prevent submission
+            var validation = Array.prototype.filter.call(forms, function(form) {
+              form.addEventListener('submit', function(event) {
+                if (form.checkValidity() === false) {
+                  event.preventDefault();
+                  event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+              }, false);
+            });
+          }, false);
+        })();
+        </script>
