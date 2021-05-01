@@ -1,12 +1,34 @@
 <% layout('layouts/boilerplate') %>
-    <form action="/parks/<%= park._id%>?_method=PUT" method="POST">
+    <form action="/parks/<%= park._id%>?_method=PUT" method="POST" class="needs-validation" novalidate>
     <div>
         <label for="title">Title</label>
-        <input type="text" id="title" name="park[title]" value="<%= park.title %>">
+        <input type="text" id="title" name="park[title]" value="<%= park.title %>" required>
+        <div class="valid-feedback">
+            Looks good!
+        </div>
+        <div id="title" class="invalid-feedback">
+            Please provide a park title.
+          </div>
     </div>
     <div>
         <label for="location">Location</label>
-        <input type="text" id="location" name="park[location]" value=<%= park.location %>>
+        <input type="text" id="location" name="park[location]" required value="<%= park.location %>" >
+        <div class="valid-feedback">
+            Looks good!
+        </div>
+        <div id="title" class="invalid-feedback">
+            Please provide a location.
+          </div>
+    </div>
+    <div>
+        <label for="description">Description</label>
+        <textarea type="text"  id="description" name="park[description]" aria-describedby="description" required ><%= park.description %></textarea>
+        <div class="valid-feedback">
+            Looks good!
+        </div>
+        <div class="invalid-feedback">
+            Please enter a description in the textarea.
+          </div>
     </div>
     <button>Save Edits</button>
     </form>
@@ -14,3 +36,22 @@
     <footer>
         <button><a href="/parks">Back to All Parks</a></button>
     </footer>
+
+    <script>
+        (function() {
+          window.addEventListener('load', function() {
+            // Fetch all the forms we want to apply custom Bootstrap validation styles to
+            var forms = document.getElementsByClassName('needs-validation');
+            // Loop over them and prevent submission
+            var validation = Array.prototype.filter.call(forms, function(form) {
+              form.addEventListener('submit', function(event) {
+                if (form.checkValidity() === false) {
+                  event.preventDefault();
+                  event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+              }, false);
+            });
+          }, false);
+        })();
+        </script>
