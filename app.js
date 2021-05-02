@@ -12,6 +12,11 @@ const methodOverride = require("method-override");
 const morgan = require("morgan");
 const catchAsync = require("./utils/catchAsync");
 const ExpressError = require("./utils/ExpressError");
+const Joi = require("joi");
+const { parkSchema } = require("./joiValidations");
+
+//== Express Router routes variable declaration ==//
+const parksRoutes = require("./routes/parks");
 // env variables
 const PORT = process.env.PORT || 3001;
 const IP = process.env.IP;
@@ -40,7 +45,20 @@ db.once("open", () => {
   console.log("Connected to local Database");
 });
 
+// joi validations
+const validatePark = (req, res, next) => {
+  const { error } = parkSchema.validate(req.body);
+  if (error) {
+    const msg = error.details.map((element) => element.message).join(",");
+    throw new ExpressError(msg, 400);
+  } else {
+    next();
+  }
+};
+
 //=== routes ===//
+
+app.use("/parks", parksRoutes);
 
 // home page
 app.get("/", (req, res) => {
@@ -51,74 +69,6 @@ app.get("/", (req, res) => {
 app.get("/about", (req, res) => {
   res.render("about");
 });
-
-// GET all parks
-app.get(
-  "/parks",
-  catchAsync(async (req, res) => {
-    const parks = await Park.find({});
-    res.render("parks/index", { parks });
-  })
-);
-
-//=== Make a NEW park ====//
-// GET form to make a new park
-app.get("/parks/new", (req, res) => {
-  res.render("parks/new");
-});
-
-// POST req to make a NEW park
-app.post(
-  "/parks",
-  catchAsync(async (req, res) => {
-    if (!req.body.park) throw new ExpressError("Invalid Park Data", 400);
-    const park = new Park(req.body.park);
-    await park.save();
-    res.redirect(`/parks/${park._id}`);
-  })
-);
-
-//=== GET one park, SHOW ===//
-app.get(
-  "/parks/:id",
-  catchAsync(async (req, res) => {
-    const park = await Park.findById(req.params.id);
-    res.render("parks/show", { park });
-  })
-);
-
-//====  EDIT PARK =====//
-// GET form for EDIT
-app.get(
-  "/parks/:id/edit",
-  catchAsync(async (req, res) => {
-    const park = await Park.findById(req.params.id);
-    res.render("parks/edit", { park });
-  })
-);
-
-// PUT req to EDIT a park
-app.put(
-  "/parks/:id",
-  catchAsync(async (req, res) => {
-    const { id } = req.params;
-    const park = await Park.findByIdAndUpdate(id, { ...req.body.park });
-    res.redirect(`/parks/${park._id}`);
-  })
-);
-
-// DELETE park
-app.delete(
-  "/parks/:id",
-  catchAsync(async (req, res) => {
-    console.log("This is the req.params for delete park route");
-    console.log(`This is req.params: ${req.params}`);
-    console.log(req.params);
-    const { id } = req.params;
-    await Park.findByIdAndDelete(id);
-    res.redirect("/parks");
-  })
-);
 
 app.all("*", (req, res, next) => {
   next(new ExpressError("Page Not Found", 404));
