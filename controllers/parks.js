@@ -19,8 +19,6 @@ module.exports.createPark = async (req, res, next) => {
     filename: file.filename,
   }));
   await park.save();
-  console.log("This is createPark controller");
-  console.log(park);
   res.redirect(`/parks/${park._id}`);
 };
 
@@ -36,7 +34,14 @@ module.exports.renderEditForm = async (req, res) => {
 
 module.exports.editPark = async (req, res) => {
   const { id } = req.params;
+
   const park = await Park.findByIdAndUpdate(id, { ...req.body.park });
+  updatedImages = req.files.map((file) => ({
+    url: file.path,
+    filename: file.filename,
+  }));
+  park.images.push(...updatedImages);
+  await park.save();
   res.redirect(`/parks/${park._id}`);
 };
 

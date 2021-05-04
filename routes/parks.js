@@ -46,7 +46,12 @@ router.get("/:id", catchAsync(parksController.showPark));
 router.get("/:id/edit", catchAsync(parksController.renderEditForm));
 
 // PUT req to EDIT a park
-router.put("/:id", validatePark, catchAsync(parksController.editPark));
+router.put(
+  "/:id",
+  upload.array("image"),
+  validatePark,
+  catchAsync(parksController.editPark)
+);
 
 // DELETE park
 router.delete("/:id", catchAsync(parksController.deletePark));

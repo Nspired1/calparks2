@@ -1,5 +1,5 @@
 <% layout('layouts/boilerplate') %>
-    <form action="/parks/<%= park._id%>?_method=PUT" method="POST" class="needs-validation" novalidate>
+    <form action="/parks/<%= park._id%>?_method=PUT" method="POST" class="needs-validation" enctype="multipart/form-data" novalidate>
     <div>
         <label for="title">Title</label>
         <input type="text" id="title" name="park[title]" value="<%= park.title %>" required>
@@ -19,6 +19,11 @@
         <div id="title" class="invalid-feedback">
             Please provide a location.
           </div>
+    </div>
+    <div>
+      <label for="image">Image</label>
+      <!-- NOTE: name MUST match what multer is looking for -->
+      <input type="file" id="image" name="image" multiple>
     </div>
     <div>
         <label for="description">Description</label>
