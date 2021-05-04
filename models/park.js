@@ -4,7 +4,12 @@ const Schema = mongoose.Schema;
 const ParkSchema = new Schema({
   title: String,
   price: String,
-  image: String,
+  images: [
+    {
+      url: String,
+      filename: String,
+    },
+  ],
   description: String,
   location: String,
 });

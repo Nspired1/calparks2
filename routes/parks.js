@@ -29,7 +29,14 @@ router.get("/", catchAsync(parksController.index));
 router.get("/new", parksController.renderNewForm);
 
 // POST req to make a NEW park
-router.post("/", validatePark, catchAsync(parksController.createPark));
+
+router.post(
+  "/",
+  //name in the array() MUST match the name in the new.ejs image upload section
+  upload.array("image"),
+  validatePark,
+  catchAsync(parksController.createPark)
+);
 
 //=== GET one park, SHOW ===//
 router.get("/:id", catchAsync(parksController.showPark));

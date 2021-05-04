@@ -1,4 +1,5 @@
 const Park = require("../models/park");
+const { cloudinary } = require("../cloudinary");
 
 module.exports.index = async (req, res) => {
   const parks = await Park.find({});
@@ -9,9 +10,17 @@ module.exports.renderNewForm = (req, res) => {
   res.render("parks/new");
 };
 
-module.exports.createPark = async (req, res) => {
+module.exports.createPark = async (req, res, next) => {
   const park = new Park(req.body.park);
+  console.log("This is in the createPark Controller");
+  console.log(req.body.park);
+  park.images = req.files.map((file) => ({
+    url: file.path,
+    filename: file.filename,
+  }));
   await park.save();
+  console.log("This is createPark controller");
+  console.log(park);
   res.redirect(`/parks/${park._id}`);
 };
 
