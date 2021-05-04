@@ -20,10 +20,9 @@
             Please provide a location.
           </div>
     </div>
-    <div>
-      <label for="image">Image</label>
-      <!-- NOTE: name MUST match what multer is looking for -->
-      <input type="file" id="image" name="image" multiple>
+    <div class="mb-3">
+      <label for="image" class="form-label">Upload Photos</label>
+      <input class="form-control" type="file" id="image" name="image" multiple>
     </div>
     <div>
         <label for="description">Description</label>
@@ -34,6 +33,15 @@
         <div class="invalid-feedback">
             Please enter a description in the textarea.
           </div>
+    </div>
+    <div class="mb-3">
+      <% park.images.map((image, i) =>{ %>
+       <img src="<%= image.url %> " alt="" class="img-thumbnail">
+       <div class="form-check-inline">
+         <input type="checkbox" id="image-<%= i %>" name="deleteImages" value="<%=image.filename %>">
+       </div>
+       <label for="image-<%= i %>">Delete?</label>
+        <% }) %>
     </div>
     <button>Save Edits</button>
     </form>

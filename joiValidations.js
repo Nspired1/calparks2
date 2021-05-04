@@ -11,5 +11,5 @@ module.exports.parkSchema = Joi.object({
     description: Joi.string().required(),
     price: Joi.number(),
   }).required(),
-  deletedImages: Joi.array(),
+  deleteImages: Joi.array(),
 });

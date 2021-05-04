@@ -42,6 +42,15 @@ module.exports.editPark = async (req, res) => {
   }));
   park.images.push(...updatedImages);
   await park.save();
+  if (req.body.deleteImages) {
+    for (let filename of req.body.deleteImages) {
+      await cloudinary.uploader.destroy(filename);
+    }
+    await park.updateOne({
+      $pull: { images: { filename: { $in: req.body.deleteImages } } },
+    });
+  }
+
   res.redirect(`/parks/${park._id}`);
 };
 
