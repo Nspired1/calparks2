@@ -36,7 +36,7 @@
     </div>
     <div class="mb-3">
       <% park.images.map((image, i) =>{ %>
-       <img src="<%= image.url %> " alt="" class="img-thumbnail">
+       <img src="<%= image.thumbnail %> " alt="" class="img-thumbnail">
        <div class="form-check-inline">
          <input type="checkbox" id="image-<%= i %>" name="deleteImages" value="<%=image.filename %>">
        </div>
