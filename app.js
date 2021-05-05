@@ -37,6 +37,7 @@ mongoose.connect("mongodb://localhost:27017/calparks2", {
   useNewUrlParser: true,
   useCreateIndex: true,
   useUnifiedTopology: true,
+  useFindAndModify: false,
 });
 
 const db = mongoose.connection;

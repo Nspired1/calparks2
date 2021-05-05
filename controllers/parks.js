@@ -34,7 +34,6 @@ module.exports.renderEditForm = async (req, res) => {
 
 module.exports.editPark = async (req, res) => {
   const { id } = req.params;
-
   const park = await Park.findByIdAndUpdate(id, { ...req.body.park });
   updatedImages = req.files.map((file) => ({
     url: file.path,
@@ -50,15 +49,15 @@ module.exports.editPark = async (req, res) => {
       $pull: { images: { filename: { $in: req.body.deleteImages } } },
     });
   }
-
   res.redirect(`/parks/${park._id}`);
 };
 
 module.exports.deletePark = async (req, res) => {
-  console.log("This is the req.params for delete park route");
-  console.log(`This is req.params: ${req.params}`);
-  console.log(req.params);
   const { id } = req.params;
+  const park = await Park.findById(id);
+  park.images.map((image) => {
+    cloudinary.uploader.destroy(image.filename);
+  });
   await Park.findByIdAndDelete(id);
   res.redirect("/parks");
 };
