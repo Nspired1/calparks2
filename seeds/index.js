@@ -28,7 +28,8 @@ const seedDB = async () => {
     const park = new Park({
       location: `${cities[random30].city}, ${cities[random30].state}`,
       title: `${sample(descriptors)} ${sample(places)}`,
-      image: "https://source.unsplash.com/s/collections/national-park",
+      description:
+        "Random loran ipsum bacon brussel sprouts pie Captain America, Infinite Frontier, invisible kingdom, far sector cloud city, East of West.",
     });
     await park.save();
   }
@@ -37,4 +38,5 @@ const seedDB = async () => {
 // invoking the function that will actually seed the database
 seedDB().then(() => {
   mongoose.connection.close();
+  console.log("Close connection to local database");
 });
