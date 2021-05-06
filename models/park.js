@@ -17,6 +17,12 @@ const ParkSchema = new Schema({
   images: [ImageSchema],
   description: String,
   location: String,
+  reviews: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Review",
+    },
+  ],
 });
 
 module.exports = mongoose.model("Park", ParkSchema);

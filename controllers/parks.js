@@ -23,7 +23,7 @@ module.exports.createPark = async (req, res, next) => {
 };
 
 module.exports.showPark = async (req, res) => {
-  const park = await Park.findById(req.params.id);
+  const park = await Park.findById(req.params.id).populate("reviews");
   res.render("parks/show", { park });
 };
 

@@ -7,16 +7,18 @@ const app = express();
 const path = require("path");
 const mongoose = require("mongoose");
 const Park = require("./models/park");
+const Review = require("./models/review");
 const ejsMate = require("ejs-mate");
 const methodOverride = require("method-override");
 const morgan = require("morgan");
 const catchAsync = require("./utils/catchAsync");
 const ExpressError = require("./utils/ExpressError");
 const Joi = require("joi");
-const { parkSchema } = require("./joiValidations");
+const { parkSchema, reviewSchema } = require("./joiValidations");
 
 //== Express Router routes variable declaration ==//
 const parksRoutes = require("./routes/parks");
+const { allowedNodeEnvironmentFlags } = require("process");
 // env variables
 const PORT = process.env.PORT || 3001;
 const IP = process.env.IP;
@@ -57,6 +59,16 @@ const validatePark = (req, res, next) => {
   }
 };
 
+const validateReview = (req, res, next) => {
+  const { error } = reviewSchema.validate(req.body);
+  if (error) {
+    const msg = error.details.map((element) => element.message).join(",");
+    throw new ExpressError(msg, 400);
+  } else {
+    next();
+  }
+};
+
 //=== routes ===//
 
 app.use("/parks", parksRoutes);
@@ -70,6 +82,30 @@ app.get("/", (req, res) => {
 app.get("/about", (req, res) => {
   res.render("about");
 });
+
+app.post(
+  "/parks/:id/reviews",
+  validateReview,
+  catchAsync(async (req, res) => {
+    const park = await Park.findById(req.params.id);
+    const review = new Review(req.body.review);
+    park.reviews.push(review);
+    await review.save();
+    await park.save();
+    res.redirect(`/parks/${park._id}`);
+  })
+);
+
+app.delete(
+  "/parks/:id/reviews/:reviewId",
+  validateReview,
+  catchAsync(async (req, res) => {
+    const { id, reviewId } = req.params;
+    await Park.findByIdAndUpdate(id, { $pull: { reviews: reviewId } });
+    await Review.findByIdAndDelete(reviewId);
+    res.redirect(`/parks/${id}`);
+  })
+);
 
 app.all("*", (req, res, next) => {
   next(new ExpressError("Page Not Found", 404));

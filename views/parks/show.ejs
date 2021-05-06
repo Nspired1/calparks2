@@ -32,6 +32,35 @@
             <button>DELETE</button>
         </form>
     </p>
+    <div>
+        <h2>Leave a Review</h2>
+        <form action="/parks/<%= park._id %>/reviews" method="POST" class="mb-3 needs-validation" novalidate >
+            <div class="mb-3">
+                <label class="form-label" for="rating">Rating</label>
+                <input class="form-range" name="review[rating]" type="range" min="1" max="5" id="rating" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="body">Review</label>
+                <textarea class="form-control" name="review[body]" id="body" cols="5" rows="5" required></textarea>
+                <div class="valid-feedback">
+                    Looks Good!
+                </div>
+                <div class="invalid-feedback">
+                    Please provide a review.
+                  </div>
+            </div>
+            <button class="btn btn-success">Submit Review</button>
+        </form>
+        <% for(let review of park.reviews){ %>
+            <div class="mb-3">
+                    <p>Rating: <%= review.rating %></p>
+                    <p>Review: <%= review.body %></p>
+                    <form action="/parks/<%= park._id %>/reviews/<%= review._id %>?_method=DELETE" method="POST">
+                            <button class="btn btn-danger" btn-small>Delete</button>
+                    </form>
+                </div>
+        <% } %>
+    </div>
    
     <footer>
        <p>
@@ -39,5 +68,23 @@
        </p>
     </footer>
    
+    <script>
+        (function() {
+          window.addEventListener('load', function() {
+            // Fetch all the forms we want to apply custom Bootstrap validation styles to
+            var forms = document.getElementsByClassName('needs-validation');
+            // Loop over them and prevent submission
+            var validation = Array.prototype.filter.call(forms, function(form) {
+              form.addEventListener('submit', function(event) {
+                if (form.checkValidity() === false) {
+                  event.preventDefault();
+                  event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+              }, false);
+            });
+          }, false);
+        })();
+        </script>
 
     
