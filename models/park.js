@@ -25,4 +25,17 @@ const ParkSchema = new Schema({
   ],
 });
 
+// Mongo middleware to delete reviews when a park is deleted.
+// The post isn't a http req, it means AFTER a Mongo doc is deleted. Mongo has pre & post
+// findOneAndDelete is triggered by findByIdAndDelete in the controller.
+ParkSchema.post("findOneAndDelete", async function (doc) {
+  if (doc) {
+    await Review.deleteMany({
+      _id: {
+        $in: doc.reviews,
+      },
+    });
+  }
+});
+
 module.exports = mongoose.model("Park", ParkSchema);
