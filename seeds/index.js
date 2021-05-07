@@ -36,6 +36,7 @@ const seedDB = async () => {
 };
 
 // invoking the function that will actually seed the database
+// to run seed file at command prompt at root dir type node seeds/index.js
 seedDB().then(() => {
   mongoose.connection.close();
   console.log("Close connection to local database");
