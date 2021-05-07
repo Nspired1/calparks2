@@ -18,7 +18,7 @@ const { parkSchema, reviewSchema } = require("./joiValidations");
 
 //== Express Router routes variable declaration ==//
 const parksRoutes = require("./routes/parks");
-const { allowedNodeEnvironmentFlags } = require("process");
+
 // env variables
 const PORT = process.env.PORT || 3001;
 const IP = process.env.IP;
@@ -30,6 +30,8 @@ app.set("views", path.join(__dirname, "views"));
 
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
+
+app.use(express.static(path.join(__dirname, "public")));
 
 // console logger for dev env
 app.use(morgan("dev"));
@@ -101,6 +103,7 @@ app.delete(
   validateReview,
   catchAsync(async (req, res) => {
     const { id, reviewId } = req.params;
+    //remove reference of review from park, then delete the review itself
     await Park.findByIdAndUpdate(id, { $pull: { reviews: reviewId } });
     await Review.findByIdAndDelete(reviewId);
     res.redirect(`/parks/${id}`);
