@@ -10,12 +10,12 @@ const Park = require("./models/park");
 const Review = require("./models/review");
 const ejsMate = require("ejs-mate");
 const methodOverride = require("method-override");
-const morgan = require("morgan");
+const session = require("express-session");
 const catchAsync = require("./utils/catchAsync");
 const ExpressError = require("./utils/ExpressError");
 const Joi = require("joi");
 const { parkSchema, reviewSchema } = require("./joiValidations");
-
+const morgan = require("morgan");
 //== Express Router routes variable declaration ==//
 const parksRoutes = require("./routes/parks");
 
@@ -27,11 +27,23 @@ const IP = process.env.IP;
 app.engine("ejs", ejsMate);
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
-
-app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
 
+app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "public")));
+
+const sessionConfig = {
+  secret: "notthebestsecret",
+  resave: false,
+  saveUninitialized: true,
+  cookie: {
+    httpOnly: true,
+    expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
+    maxAge: 1000 * 60 * 60 * 24 * 7,
+  },
+};
+
+app.use(session(sessionConfig));
 
 // console logger for dev env
 app.use(morgan("dev"));
@@ -121,7 +133,7 @@ app.use((err, req, res, next) => {
   res.send("Something went wrong, please try again later");
 });
 
-// to start app at command line type 'node app.js' or 'nodemon app.js' and press <ENTER>
+// to start app at command line type 'node app.js', 'nodemon', or 'nodemon app.js' and press <ENTER>
 app.listen(PORT, () => {
   console.log(`App running and listening on PORT: ${PORT} and IP: ${IP}`);
 });
